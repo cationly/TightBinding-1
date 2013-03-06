@@ -4,9 +4,7 @@ import numpy
 class TightBinding:
 	"""
 	Tight-binding Hamiltonian.
-	The design of this class is composition.
 	"""
-
 	def __init__(self):
 		"""
 		"""
@@ -17,7 +15,6 @@ class TightBinding:
 		self.orbital= None 
 		self.buildHamiltonian()
 		 
-
 	def __repr__(self):
 		return self.H.__repr__()
 
