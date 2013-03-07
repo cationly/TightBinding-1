@@ -33,10 +33,14 @@ class TightBinding_Unit(unittest.TestCase):
 		self.assertAlmostEqual(self.TB.H[1,0],1.1)
 
 	def test_Eigen(self):
-		self.TB = TightBinding()
-		self.TB.setSize(2).setTransfer(0.1)
-		self.assertAlmostEqual(self.TB.energy[0],-0.1)
-		self.assertAlmostEqual(self.TB.energy[1],0.1)
+		self.TB = TightBinding(2,0.1)
+		self.assertAlmostEqual(self.TB.energy(0),-0.1)
+		self.assertAlmostEqual(self.TB.energy(1),0.1)
+		self.TB = TightBinding(4,0.1)
+		self.assertAlmostEqual(self.TB.energy(0),-self.TB.energy(3))
+		self.assertAlmostEqual(self.TB.energy(1),-self.TB.energy(2))
+		
+		
 		
 
 

@@ -5,13 +5,14 @@ class TightBinding:
 	"""
 	Tight-binding Hamiltonian.
 	"""
-	def __init__(self):
+	def __init__(self,size=2,transfer=0.1,periodic=False):
 		"""
 		"""
-		self.__size = 2
-		self.__transfer = 0.1
+		self.__size = size
+		self.__transfer = transfer
 		self._isPeriodic = False
 		self.H= None
+		self.sortlist= None
 		self.eigen= None
 		self.orbital= None 
 		self.buildHamiltonian()
@@ -21,12 +22,11 @@ class TightBinding:
 		return self.H.__repr__()
 
 	def energy(self,index):
-		if self.needsDiag:
-			pass
-		else:
-			if index < 0 or index >= self.__size:
-				raise ValueError("index is out of array bounds.")
-			return self.eigen[index]
+		if index < 0 or index >= self.__size:
+			raise ValueError("index is out of array bounds.")
+		elif self.needsDiag:
+			self.diagonalize()
+		return self.eigen[self.sortlist[index]]
 
 	def buildHamiltonian(self):
 		self.H = numpy.zeros((self.__size,self.__size))
@@ -36,6 +36,7 @@ class TightBinding:
 		if self._isPeriodic:
 			self.H[0,self.__size-1] = self.__transfer
 			self.H[self.__size-1,0] = self.__transfer
+		self.needsDiag = True
 
 	def size(self):
 		s = self.H.shape
@@ -43,6 +44,11 @@ class TightBinding:
 			return s[0]
 		else:
 			raise ValueError("The shape of the Hamiltonian is not square.")
+
+	def diagonalize(self):
+		self.eigen,self.orbitals = numpy.linalg.eig(self.H)
+		self.sortlist = self.eigen.argsort()
+		self.needsDiag = False
 
 	def setSize(self,n):
 		self.__size = n
